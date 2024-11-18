@@ -1,0 +1,67 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ask_Tsareva</title>
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+</head>
+<body>
+    <header class="header">
+        <div class="logo">
+            <a href="#">
+                <img src="{% static 'img/LOGO.png' %}" alt="LearnToday" class="logo-image">
+            </a>
+        </div>
+        <div class="search">
+            <form action="#">
+                <input class="search-input" type="text">
+                <button class="search-button">Learn</button>
+            </form>
+        </div>
+        <div class="profile">
+            <div>
+                <img src="{% static 'img/profile.png' %}" alt="profile" class="profile-image">
+            </div>
+            <div class="profile-settings">
+                <div class="account-name">Kapitoshka</div>
+                <div class="account-actions">
+                    <a href="./settings.html">Settings</a>
+                    <a href="./logout.html">Log out</a>
+                </div>
+            </div>
+        </div>
+    </header>
+    <main class="container">
+        {% block title-bar %}
+
+        {% endblock %}
+
+        <div class="content">
+            {% block content %}
+            {% endblock %}
+            <aside class="sidebar">
+                <section class="popular-tags">
+                    <h2>Tags of the week</h2>
+                    <div class="tags">
+                        <a href="#">Tag</a>
+                        <a href="#">Tag</a>
+                        <a href="#">Tag</a>
+                    </div>
+                </section>
+                <section class="top-mentors">
+                    <h2>Top mentors</h2>
+                    <ul class="top-mentors-list">
+                        <li><a href="#">Username</a></li>
+                        <li><a href="#">Username</a></li>
+                        <li><a href="#">Username</a></li>
+                    </ul>
+                </section>
+            </aside>
+        </div>
+    </main>
+
+</body>
+</html>

@@ -1,0 +1,13 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{%block title-bar %}
+    <div class="title-bar">
+        <h1>Post title</h1>
+        <a href="{% url 'index' %}">Home page</a>
+    </div>
+{% endblock %}
+
+{% block content %}
+    {% include 'question.html' with question=item%}
+{% endblock %}

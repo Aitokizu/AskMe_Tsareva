@@ -1,0 +1,13 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{%block title-bar %}
+    <div class="title-bar">
+        <h1>New questions</h1>
+        <a href="{% url 'index' %}">Hot questions</a>
+    </div>
+{% endblock %}
+
+{% block content %}
+    {% include 'layouts/question.html' %}
+{% endblock %}

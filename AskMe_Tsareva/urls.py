@@ -20,7 +20,9 @@ from app import views
 
 
 urlpatterns = [
+    path('', views.index, name="index"),
+    path('new/', views.new, name="new"),
+    path('question/<int:question_id>', views.question, name="question"),
     path('admin/', admin.site.urls),
-    path('', views.index),
 
 ]
