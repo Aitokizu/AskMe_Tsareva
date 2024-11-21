@@ -1,15 +1,27 @@
 {% extends 'layouts/base.html' %}
 {% load static %}
 
-{%block title-bar %}
-    <div class="title-bar">
-        <h1>New questions</h1>
-        <a href="{% url 'index' %}">Hot questions</a>
-    </div>
+{% block title_bar %}
+<div class="title-bar">
+    <h1>New questions</h1>
+    <a href="{% url 'index' %}">Hot questions</a>
+</div>
 {% endblock %}
-
 {% block content %}
-    {% for questions in questions %}
-        {% include 'question.html' %}
-    {% endfor %}
+            <div class="cards">
+                {% for question in questions %}
+
+                    {% include 'question.html' %}
+
+                {% endfor %}
+
+
+                <div class="pagination">
+                    <button>1</button>
+                    <button>2</button>
+                    <button>...</button>
+                    <button>100</button>
+
+                </div>
+            </div>
 {% endblock %}

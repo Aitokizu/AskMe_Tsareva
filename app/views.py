@@ -8,7 +8,7 @@ QUESTIONS = [
         'title': f'title {i}',
         'id': i,
         'text': f'question number {i}'
-    } for i in range(1,30)
+    } for i in range(30)
 ]
 def index(request):
     return render(
@@ -16,3 +16,10 @@ def index(request):
         context={'questions': QUESTIONS}
     )
 
+def new(request):
+    new_questions = copy.deepcopy(QUESTIONS)
+    new_questions.reverse()
+    return render(
+        request, 'new.html',
+        context={'questions': new_questions}
+    )
