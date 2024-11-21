@@ -9,5 +9,7 @@
 {% endblock %}
 
 {% block content %}
-    {% include 'layouts/question.html' %}
+    {% for questions in questions %}
+        {% include 'question.html' %}
+    {% endfor %}
 {% endblock %}

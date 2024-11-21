@@ -35,13 +35,19 @@
         </div>
     </header>
     <main class="container">
-        {% block title-bar %}
 
-        {% endblock %}
+        <div class="title-bar">
+            <h1>Hot questions</h1>
+            <a href="./new-questions.html">New questions</a>
+        </div>
 
         <div class="content">
+
             {% block content %}
+
             {% endblock %}
+
+
             <aside class="sidebar">
                 <section class="popular-tags">
                     <h2>Tags of the week</h2>
