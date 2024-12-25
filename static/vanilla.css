@@ -1,0 +1,107 @@
+body{
+    margin: 0;
+}
+.header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #F28D52;
+    padding: 10px;
+}
+.profile{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.profile-image{
+    height: 50px;
+    width: 50px;
+    border: 2px solid black;
+}
+.search-button{
+    all: unset;
+    border: 2px;
+    border-radius: 3px;
+    background-color: #F25C5C;
+    padding: 8px;
+    color: white;
+    cursor: pointer;
+}
+.search-button:hover{
+    opacity: 80%;
+}
+.search-input{
+    height: 25px;
+    width: 500px;
+}
+.container{
+    padding: 10px;
+}
+.title-bar{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+.content{
+    display: flex;
+    gap: 20px;
+}
+.cards{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 70%;
+}
+.card{
+    border: 2px solid #BFAA84;
+    padding: 10px;
+    display: flex;
+    gap: 10px;
+}
+.user-post{
+    width: 15%;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+.card-image{
+    width: 100px;
+    height: 100px;
+    border: 1px solid black;
+}
+.card-likes{
+    width: 100px;
+    padding: 0px;
+}
+.card-title{
+    margin: 0px;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+.post-content-preview{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 40px;
+}
+.post-content-bottom{
+    display: flex;
+    justify-content: space-between;
+}
+.sidebar{
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    width: 30%;
+}
+.popular-tags{
+    margin-bottom: 10px;
+}
+.top-mentors-list{
+    list-style: none;
+    padding: 0px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}

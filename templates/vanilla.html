@@ -1,0 +1,146 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <link rel="stylesheet" href="{% static 'vanilla.css' %}" >
+    </head>
+    <body>
+        <header class="header">
+            <div class="logo">
+                <a href="#">
+                    LearnToday
+                </a>
+            </div>
+            <div class="search">
+                <form action="#">
+                    <input class="search-input" type="text">
+                    <button class="search-button">Learn</button>
+                </form>
+            </div>
+            <div class="profile">
+                <div class="profile-image">
+                    <img src="./static/img/profile.png" alt="profile">
+                </div>
+                <div class="profile-settings">
+                    <div class="account-name">Kapitoshka</div>
+                    <div class="account-actions">
+                        <a href="./settings.html">Settings</a>
+                        <a href="./logout.html">Log out</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <main class="container">
+            <div class="title-bar">
+                <h1>Hot questions</h1>
+                <a href="./new-questions.html">New questions</a>
+            </div>
+
+            <div class="content">
+                <div class="cards">
+                    {% for question in questions %}
+
+                        <article class="card">
+                            <div class="user-post">
+                                <img src="./image.jpg" alt="image" class="card-image">
+                                <input type="number" class="card-likes" value="10">
+                            </div>
+
+                            <div class="post-content">
+                                <div class="post-content-preview">
+                                    <h3 class="card-title"><a href="#">Question title</a></h3>
+                                    <div class="card-text">Text here</div>
+                                </div>
+                                <div class="post-content-bottom">
+                                    <a href="./answers.html" >Answer(23)</a>
+                                    <div class="tags">
+                                        <a href="#">Link</a>
+                                        <a href="#">Link</a>
+                                        <a href="#">Link</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+
+
+                        <article class="card">
+                            <div class="user-post">
+                                <img src="./image.jpg" alt="image" class="card-image">
+                                <input type="number" class="card-likes" value="10">
+                            </div>
+
+                            <div class="post-content">
+                                <div class="post-content-preview">
+                                    <h3 class="card-title"><a href="#">Question title</a></h3>
+                                    <div class="card-text">Text here</div>
+                                </div>
+                                <div class="post-content-bottom">
+                                    <a href="./answers.html">Answer(23)</a>
+                                    <div class="tags">
+                                        <a href="#">Link</a>
+                                        <a href="#">Link</a>
+                                        <a href="#">Link</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+
+
+                        <article class="card">
+                            <div class="user-post">
+                                <img src="./image.jpg" alt="image" class="card-image">
+                                <input type="number" class="card-likes" value="10">
+                            </div>
+
+                            <div class="post-content">
+                                <div class="post-content-preview">
+                                    <h3 class="card-title"><a href="#">Question title</a></h3>
+                                    <div class="card-text">Text here</div>
+                                </div>
+                                <div class="post-content-bottom">
+                                    <a href="./answers.html">Answer(23)</a>
+                                    <div class="tags">
+                                        <a href="#">Link</a>
+                                        <a href="#">Link</a>
+                                        <a href="#">Link</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+
+                    {% endfor %}
+
+                    <div class="pagination">
+                        <button>1</button>
+                        <button>2</button>
+                        <button>...</button>
+                        <button>100</button>
+
+                    </div>
+                </div>
+                <aside class="sidebar">
+                    <section class="popular-tags">
+                        <h2>Tags of the week</h2>
+                        <div class="tags">
+                            <a href="#">Tag</a>
+                            <a href="#">Tag</a>
+                            <a href="#">Tag</a>
+                        </div>
+                    </section>
+                    <section class="top-mentors">
+                        <h2>Top mentors</h2>
+                        <ul class="top-mentors-list">
+                            <li><a href="#">Username</a></li>
+                            <li><a href="#">Username</a></li>
+                            <li><a href="#">Username</a></li>
+                        </ul>
+                    </section>
+                </aside>
+            </div>
+        </main>
+
+    </body>
+</html>
