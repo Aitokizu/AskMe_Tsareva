@@ -1,0 +1,18 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block headline %}
+    <div class="title-bar">
+        <h1>New questions</h1>
+        <a href="{% url 'index' %}">Hot questions</a>
+    </div>
+{% endblock %}
+
+{% block content %}
+                    {% for question in questions %}
+
+                        {% include 'layouts/question_card.html' %}
+
+                    {% endfor %}
+
+{% endblock %}

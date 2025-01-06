@@ -1,3 +1,5 @@
+import copy
+
 from django.http import HttpResponse
 from django.shortcuts import render
 
@@ -13,6 +15,15 @@ QUESTIONS = [
 def index(request):
     return render(
         request,
-        template_name='vanilla.html',
+        template_name='hot_questions.html',
         context={'questions': QUESTIONS }
+    )
+
+def new(request):
+    new_questions = copy.deepcopy(QUESTIONS)
+    new_questions.reverse()
+    return render(
+        request,
+        template_name='new_questions.html',
+        context={'questions': new_questions}
     )
