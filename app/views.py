@@ -27,3 +27,10 @@ def new(request):
         template_name='new_questions.html',
         context={'questions': new_questions}
     )
+
+def question(request, question_id):
+    one_question = QUESTIONS[question_id]
+    return render(
+        request, 'post.html',
+        {'item': one_question}
+    )

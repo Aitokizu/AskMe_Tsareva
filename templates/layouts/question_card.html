@@ -8,7 +8,7 @@
 
     <div class="post-content">
         <div class="post-content-preview">
-            <h3 class="card-title"><a href="#">{{question.title}}</a></h3>
+            <h3 class="card-title"><a href="{% url 'one_question' question.id %}">{{question.title}}</a></h3>
             <div class="card-text">{{question.text}}</div>
         </div>
         <div class="post-content-bottom">

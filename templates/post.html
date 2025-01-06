@@ -1,10 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'layouts/base.html' %}
+{% load static %}
 
-</body>
-</html>
+{% block headline %}
+    <div class="title-bar">
+        <h1>Post title</h1>
+        <a href="{% url 'index' %}">Home page</a>
+    </div>
+{% endblock %}
+
+{% block content %}
+
+    {% include 'layouts/question_card.html' with question=item %}
+
+{% endblock %}
