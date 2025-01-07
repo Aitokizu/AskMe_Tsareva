@@ -1,6 +1,6 @@
 import copy
 
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import HttpResponse
 from django.shortcuts import render
 
@@ -14,13 +14,11 @@ QUESTIONS = [
 
 
 def index(request):
-    page_num = int(request.GET.get('page', 1))
-    paginator = Paginator(QUESTIONS, 5)
-    page = paginator.page(page_num)
+    page = paginate(QUESTIONS, request, per_page=5)
     return render(
         request,
         template_name='hot_questions.html',
-        context={'questions': page.object_list, 'page_obj': page }
+        context={'questions': page.object_list, 'page_obj': page}
     )
 
 def new(request):
@@ -38,3 +36,14 @@ def question(request, question_id):
         request, 'post.html',
         {'item': one_question}
     )
+
+def paginate(objects_list, request, per_page=10):
+    page_num = request.GET.get('page', 1)
+    paginator = Paginator(objects_list, per_page)
+    try:
+        page = paginator.page(page_num)
+    except PageNotAnInteger:
+        page = paginator.page(1)
+    except EmptyPage:
+        page = paginator.page(paginator.num_pages)
+    return page
