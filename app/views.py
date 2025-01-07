@@ -2,7 +2,7 @@ import copy
 
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import HttpResponse, Http404
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 QUESTIONS = [
     {
@@ -50,3 +50,27 @@ def paginate(objects_list, request, per_page=10):
     except EmptyPage:
         page = paginator.page(paginator.num_pages)
     return page
+
+def profile_settings(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        bio = request.POST.get('bio')
+
+        print(f"Updated profile: {username}, {email}, {bio}")
+        return redirect('profile_settings')
+
+    user = {
+        'username': 'JohnDoe',
+        'email': 'john@example.com',
+        'bio': 'Hello, I am John!'
+    }
+    return render(request, 'profile_settings.html', {'user': user})
+
+def profile(request):
+    user ={
+        'username': 'JohnDoe',
+        'bio': 'Hello, I am John!',
+        'joined_date': '11.11.11',
+    }
+    return render(request, 'profile.html', {'user': user})

@@ -11,7 +11,7 @@
     <body>
         <header class="header">
             <div class="logo">
-                <a href="#">
+                <a href="{% url 'index' %}">
                     <img src="{% static './../static/img/LOGO.png' %}" alt="Learn Today" class="logo-image">
                 </a>
             </div>
@@ -26,9 +26,11 @@
                     <img src="{% static './../static/img/profile.png' %}" alt="profile" class="avatar">
                 </div>
                 <div class="profile-settings">
-                    <div class="account-name">Kapitoshka</div>
+                    <div class="account-name">
+                        <a href="{% url 'profile' %}">{{ user.username }}</a>
+                    </div>
                     <div class="account-actions">
-                        <a href="./settings.html">Settings</a>
+                        <a href="{% url 'profile_settings' %}">Settings</a>
                         <a href="./logout.html">Log out</a>
                     </div>
                 </div>
