@@ -86,7 +86,8 @@ body{
 }
 .post-content-bottom{
     display: flex;
-    justify-content: space-between;
+    flex-direction: row;
+    gap: 30px;
 }
 .sidebar{
     display: flex;

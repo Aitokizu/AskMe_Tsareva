@@ -37,6 +37,9 @@ def question(request, question_id):
         raise Http404("Question not found")
     return render(request, 'post.html', {'item': one_question})
 
+def ask(request):
+    return render(request, 'add_question.html')
+
 def paginate(objects_list, request, per_page=10):
     page_num = request.GET.get('page', 1)
     paginator = Paginator(objects_list, per_page)
