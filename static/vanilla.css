@@ -121,3 +121,15 @@ body{
     padding: 5px 10px;
     margin: 0 5px;
 }
+
+.user-nickname{
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+}
+
+.other{
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+}

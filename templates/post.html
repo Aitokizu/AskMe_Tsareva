@@ -1,15 +1,28 @@
 {% extends 'layouts/base.html' %}
 {% load static %}
 
-{% block headline %}
-    <div class="title-bar">
-        <h1>Post title</h1>
-        <a href="{% url 'index' %}">Home page</a>
-    </div>
-{% endblock %}
 
 {% block content %}
+    <a href="{% url 'index' %}" class="back-button">Back to questions</a>
+    <div class="user-nickname">
+        <img src="./image.jpg" alt="image" class="card-image">
+        <h4 >NICKNAME</h4>
+    </div>
+    <h1>{{ item.title }}</h1>
+    <div class="tags">
+        <a href="tag.html">Link</a>
+        <a href="tag.html">Link</a>
+        <a href="tag.html">Link</a>
+    </div>
+    <article class="card">
 
-    {% include 'layouts/question_card.html' with question=item %}
+        <p>{{ item.text }}</p>
+
+    </article>
+    <div class="other">
+        <input type="number" class="card-likes" value="10">
+        <a>Comments</a>
+
+    </div>
 
 {% endblock %}

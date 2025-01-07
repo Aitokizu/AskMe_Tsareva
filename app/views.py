@@ -1,7 +1,7 @@
 import copy
 
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.shortcuts import render
 
 QUESTIONS = [
@@ -24,18 +24,18 @@ def index(request):
 def new(request):
     new_questions = copy.deepcopy(QUESTIONS)
     new_questions.reverse()
+    page = paginate(new_questions, request, per_page=5)
     return render(
         request,
         template_name='new_questions.html',
-        context={'questions': new_questions}
+        context={'questions': page.object_list, 'page_obj': page}
     )
 
 def question(request, question_id):
-    one_question = QUESTIONS[question_id]
-    return render(
-        request, 'post.html',
-        {'item': one_question}
-    )
+    one_question = next((q for q in QUESTIONS if q['id'] == question_id), None)
+    if one_question is None:
+        raise Http404("Question not found")
+    return render(request, 'post.html', {'item': one_question})
 
 def paginate(objects_list, request, per_page=10):
     page_num = request.GET.get('page', 1)
