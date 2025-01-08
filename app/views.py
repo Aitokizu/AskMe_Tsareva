@@ -1,35 +1,26 @@
+from django.contrib.auth.models import User
+from django.shortcuts import render, redirect
+from django.http import Http404
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 import copy
 
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.http import HttpResponse, Http404
-from django.shortcuts import render, redirect
 
 QUESTIONS = [
-    {
-        'title': f'title {i}',
-        'id': i,
-        'text': f'This is text for question {i}'
-    } for i in range(1,30)
+    {'title': f'title {i}', 'id': i, 'text': f'This is text for question {i}'}
+    for i in range(1, 30)
 ]
 
 
 def index(request):
     page = paginate(QUESTIONS, request, per_page=5)
-    return render(
-        request,
-        template_name='hot_questions.html',
-        context={'questions': page.object_list, 'page_obj': page}
-    )
+    return render(request, 'hot_questions.html', {'questions': page.object_list, 'page_obj': page})
+
 
 def new(request):
-    new_questions = copy.deepcopy(QUESTIONS)
-    new_questions.reverse()
+    new_questions = QUESTIONS[::-1]
     page = paginate(new_questions, request, per_page=5)
-    return render(
-        request,
-        template_name='new_questions.html',
-        context={'questions': page.object_list, 'page_obj': page}
-    )
+    return render(request, 'new_questions.html', {'questions': page.object_list, 'page_obj': page})
+
 
 def question(request, question_id):
     one_question = next((q for q in QUESTIONS if q['id'] == question_id), None)
@@ -37,9 +28,11 @@ def question(request, question_id):
         raise Http404("Question not found")
     return render(request, 'post.html', {'item': one_question})
 
+
 def ask(request):
     return render(request, 'add_question.html')
 
+# Пагинация
 def paginate(objects_list, request, per_page=10):
     page_num = request.GET.get('page', 1)
     paginator = Paginator(objects_list, per_page)
@@ -51,26 +44,28 @@ def paginate(objects_list, request, per_page=10):
         page = paginator.page(paginator.num_pages)
     return page
 
+
 def profile_settings(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         email = request.POST.get('email')
         bio = request.POST.get('bio')
 
-        print(f"Updated profile: {username}, {email}, {bio}")
+
+        user = request.user
+        user.username = username
+        user.email = email
+        user.profile.bio = bio
+        user.save()
+        user.profile.save()
+
         return redirect('profile_settings')
 
-    user = {
-        'username': 'JohnDoe',
-        'email': 'john@example.com',
-        'bio': 'Hello, I am John!'
-    }
+
+    user = request.user
     return render(request, 'profile_settings.html', {'user': user})
 
+
 def profile(request):
-    user ={
-        'username': 'JohnDoe',
-        'bio': 'Hello, I am John!',
-        'joined_date': '11.11.11',
-    }
+    user = request.user
     return render(request, 'profile.html', {'user': user})
