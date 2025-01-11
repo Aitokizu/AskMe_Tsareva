@@ -22,8 +22,15 @@ def signup(request):
     return render(request, 'signup.html', {'form': form})
 
 
+from django.db.models import Count
+from .models import Question, Tag, UserProfile
+
 def index(request):
-    questions = Question.objects.order_by('-likes')
+    questions = Question.objects.annotate(
+        likes_count=Count('likes'),  # Аннотируем количество лайков
+        answers_count=Count('answers')  # Аннотируем количество ответов
+    ).order_by('-likes_count')  # Сортируем по количеству лайков
+
     popular_tags = Tag.objects.annotate(num_questions=Count('questions')).order_by('-num_questions')[:5]
     top_mentors = UserProfile.objects.annotate(num_answers=Count('user__answers')).order_by('-num_answers')[:5]
 
@@ -35,11 +42,15 @@ def index(request):
         'top_mentors': top_mentors
     })
 
-
 def new(request):
-    questions = Question.objects.order_by('-created_at')
+    questions = Question.objects.annotate(
+        likes_count=Count('likes'),  # Аннотируем количество лайков
+        answers_count=Count('answers')  # Аннотируем количество ответов
+    ).order_by('-created_at')  # Сортируем по дате создания
+
     popular_tags = Tag.objects.annotate(num_questions=Count('questions')).order_by('-num_questions')[:5]
     top_mentors = UserProfile.objects.annotate(num_answers=Count('user__answers')).order_by('-num_answers')[:5]
+
     page = paginate(questions, request, per_page=5)
     return render(request, 'new_questions.html', {
         'questions': page.object_list,
@@ -65,8 +76,17 @@ def tag_questions(request, tag_name):
 
 
 def question(request, question_id):
-    one_question = get_object_or_404(Question, id=question_id)
-    answers = Answer.objects.filter(question=one_question).order_by('-created_at')
+    one_question = get_object_or_404(
+        Question.objects.annotate(
+            likes_count=Count('likes'),  # Аннотируем количество лайков
+            answers_count=Count('answers')  # Аннотируем количество ответов
+        ),
+        id=question_id
+    )
+
+    answers = Answer.objects.filter(question=one_question).annotate(
+        likes_count=Count('likes')  # Аннотируем количество лайков для ответов
+    ).order_by('-created_at')
 
     if request.method == 'POST':
         form = AnswerForm(request.POST)

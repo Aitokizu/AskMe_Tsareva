@@ -1,23 +1,31 @@
-body{
+/* Общие стили */
+body {
     margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
 }
-.header{
+
+/* Шапка */
+.header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     background-color: #F28D52;
     padding: 10px;
 }
-.profile{
+
+.profile {
     display: flex;
     align-items: center;
     gap: 10px;
 }
-.profile-image{
+
+.profile-image {
     height: 50px;
     width: 50px;
 }
-.search-button{
+
+.search-button {
     all: unset;
     border: 2px;
     border-radius: 3px;
@@ -26,94 +34,181 @@ body{
     color: white;
     cursor: pointer;
 }
-.search-button:hover{
+
+.search-button:hover {
     opacity: 80%;
 }
-.search-input{
+
+.search-input {
     height: 25px;
     width: 500px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
 }
-.container{
+
+/* Основной контент */
+.container {
     padding: 10px;
 }
-.title-bar{
+
+.title-bar {
     display: flex;
     align-items: center;
     gap: 20px;
 }
-.content{
+
+.content {
     display: flex;
     gap: 20px;
 }
-.cards{
+
+.cards {
     display: flex;
     flex-direction: column;
     gap: 10px;
     width: 70%;
 }
-.card{
+
+/* Карточка вопроса */
+.card {
     border: 2px solid #BFAA84;
     padding: 10px;
     display: flex;
     gap: 10px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-.user-post{
+
+.user-post {
     width: 15%;
     display: flex;
     flex-direction: column;
     gap: 5px;
 }
-.card-image{
+
+.card-image {
     width: 100px;
     height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+}
 
-}
-.card-likes{
+.card-likes {
     width: 100px;
-    padding: 0px;
+    padding: 0;
 }
-.card-title{
-    margin: 0px;
+
+.card-title {
+    margin: 0;
     font-size: 20px;
     margin-bottom: 10px;
+    color: #333;
 }
-.post-content-preview{
+
+.card-title a {
+    color: #333;
+    text-decoration: none;
+}
+
+.card-title a:hover {
+    color: #007bff;
+}
+
+.post-content-preview {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     width: 100%;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
 }
-.post-content-bottom{
+
+.card-text {
+    color: #555;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.post-content-bottom {
     display: flex;
-    flex-direction: row;
-    gap: 30px;
+    align-items: center;
+    gap: 20px;
 }
-.sidebar{
+
+/* Лайки и ответы */
+.likes, .answers {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #666;
+    font-size: 14px;
+}
+
+.likes .icon, .answers .icon {
+    font-size: 16px;
+}
+
+.likes .count, .answers .count {
+    font-weight: bold;
+}
+
+/* Теги */
+.tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.tag {
+    background-color: #e9ecef;
+    color: #333;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    text-decoration: none;
+}
+
+.tag:hover {
+    background-color: #007bff;
+    color: #fff;
+}
+
+/* Сайдбар */
+.sidebar {
     display: flex;
     flex-direction: column;
     gap: 30px;
     width: 30%;
 }
-.popular-tags{
+
+.popular-tags {
     margin-bottom: 10px;
 }
-.top-mentors-list{
+
+.top-mentors-list {
     list-style: none;
-    padding: 0px;
+    padding: 0;
     display: flex;
     flex-direction: column;
     gap: 5px;
 }
-.logo-image{
-    width: 50px;
-    height: 50px;
-}
-.avatar{
+
+/* Логотип */
+.logo-image {
     width: 50px;
     height: 50px;
 }
 
+/* Аватар */
+.avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Активная страница */
 .active-page {
     font-weight: bold;
     background-color: #007bff;
@@ -123,16 +218,20 @@ body{
     margin: 0 5px;
 }
 
-.user-nickname{
+/* Никнейм пользователя */
+.user-nickname {
     display: flex;
     flex-direction: row;
     gap: 30px;
+    align-items: center;
 }
 
-.other{
+/* Дополнительные элементы */
+.other {
     display: flex;
     flex-direction: row;
     gap: 40px;
+    align-items: center;
 }
 
 /* Контейнер профиля */
@@ -143,11 +242,7 @@ body{
     text-align: center;
 }
 
-/* Аватар */
-.profile-image {
-    margin-bottom: 20px;
-}
-
+/* Аватар в профиле */
 .profile-image .avatar {
     width: 150px;
     height: 150px;
@@ -164,6 +259,7 @@ body{
 .profile-info .username {
     font-size: 24px;
     margin: 10px 0;
+    color: #333;
 }
 
 .profile-info .bio {
@@ -176,6 +272,7 @@ body{
     color: #777;
 }
 
+/* Ссылки в профиле */
 .profile-links {
     display: flex;
     justify-content: center;
@@ -190,4 +287,192 @@ body{
 
 .profile-links a:hover {
     text-decoration: underline;
+}
+
+/* Контейнер вопроса */
+.question-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Заголовок вопроса */
+.question-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Контент вопроса */
+.question-content {
+    margin-bottom: 30px;
+}
+
+/* Автор вопроса */
+.question-author {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.question-author .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.question-author .author-name {
+    font-size: 16px;
+    color: #555;
+}
+
+/* Текст вопроса */
+.question-text {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Мета-информация вопроса (лайки и теги) */
+.question-meta {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.question-meta .likes {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #666;
+}
+
+.question-meta .likes .icon {
+    font-size: 16px;
+}
+
+.question-meta .likes .count {
+    font-size: 14px;
+}
+
+.question-meta .tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.question-meta .tag {
+    background-color: #e9ecef;
+    color: #333;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    text-decoration: none;
+}
+
+.question-meta .tag:hover {
+    background-color: #007bff;
+    color: #fff;
+}
+
+/* Контейнер ответов */
+.answers-container {
+    margin-top: 30px;
+}
+
+.answers-title {
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Ответ */
+.answer {
+    border-top: 1px solid #eee;
+    padding: 20px 0;
+}
+
+.answer-author {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.answer-author .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.answer-author .author-name {
+    font-size: 14px;
+    color: #555;
+}
+
+.answer-text {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.answer-likes {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #666;
+}
+
+.answer-likes .icon {
+    font-size: 14px;
+}
+
+.answer-likes .count {
+    font-size: 12px;
+}
+
+/* Форма добавления ответа */
+.add-answer {
+    margin-top: 30px;
+}
+
+.add-answer h2 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.add-answer form textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.add-answer .submit-button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.add-answer .submit-button:hover {
+    background-color: #0056b3;
+}
+
+/* Сообщение об отсутствии ответов */
+.no-answers {
+    color: #666;
+    font-style: italic;
 }
