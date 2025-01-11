@@ -6,8 +6,9 @@ from django.http import Http404
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.template.context_processors import static
 
-from .forms import AnswerForm
+from .forms import AnswerForm, QuestionForm
 from .models import Tag, Question, Answer
+
 
 def signup(request):
     if request.method == 'POST':
@@ -18,6 +19,7 @@ def signup(request):
     else:
         form = UserCreationForm()
     return render(request, 'signup.html', {'form': form})
+
 
 def index(request):
     questions = Question.objects.order_by('-likes')
@@ -85,8 +87,15 @@ def profile_settings(request):
         user.username = username
         user.email = email
         user.profile.bio = bio
+
+        # Если есть аватар, то обновляем его
         if avatar:
             user.profile.avatar = avatar
+
+        # Проверяем, существует ли профиль у пользователя
+        if not hasattr(user, 'profile'):
+            user.profile = user.profile.create()  # Создаем профиль, если его нет
+
         user.save()
         user.profile.save()
 
@@ -99,7 +108,6 @@ def profile(request):
     user = request.user
     avatar_url = user.profile.avatar.url if user.profile.avatar else static('img/profile.png')
     return render(request, 'profile.html', {'user': user, 'avatar_url': avatar_url})
-
 
 def tag_questions(request, tag_name):
     tag = get_object_or_404(Tag, name=tag_name)

@@ -27,6 +27,7 @@ urlpatterns = [
     path('ask/', views.ask, name='ask'),
     path('profile/settings/', views.profile_settings, name='profile_settings'),
     path('profile/', views.profile, name='profile'),
+    path('accounts/profile/', views.profile, name='profile'),
     path('tag/<str:tag_name>/', tag_questions, name='tag_questions'),
     path('login/', auth_views.LoginView.as_view(), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),

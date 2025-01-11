@@ -1,15 +1,20 @@
-{% extends 'base.html' %}
+{% extends 'layouts/base.html' %}
+
+{% block headline %}
+    <div class="title-bar">
+        <h1>Questions Tagged with "{{ tag.name }}"</h1>
+        <a href="{% url 'index' %}">Back to Hot Questions</a>
+    </div>
+{% endblock %}
 
 {% block content %}
-    <h1>Questions tagged with "{{ tag.name }}"</h1>
     <div class="questions-list">
         {% for question in questions %}
-            <div class="question">
-                <h3><a href="{% url 'question' question.id %}">{{ question.title }}</a></h3>
-                <p>{{ question.text }}</p>
-            </div>
+            {% include 'layouts/question_card.html' %}
         {% empty %}
             <p>No questions with this tag.</p>
         {% endfor %}
     </div>
+
+    {% include 'layouts/pagination.html' %}
 {% endblock %}

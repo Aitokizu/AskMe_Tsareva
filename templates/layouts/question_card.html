@@ -2,7 +2,7 @@
 
 <article class="card">
     <div class="user-post">
-        <img src="{{ question.author.profile.avatar.url|default:'static/img/profile.png' }}" alt="Avatar" class="avatar">
+       <img src="{% if question.author.profile.avatar %}{{ question.author.profile.avatar.url }}{% else %}{% static 'img/profile.png' %}{% endif %}" alt="Profile Avatar" class="avatar">
     </div>
 
     <div class="post-content">
