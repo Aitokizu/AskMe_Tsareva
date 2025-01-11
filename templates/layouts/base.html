@@ -24,11 +24,15 @@
     <div class="profile">
         {% if user.is_authenticated %}
             <div class="profile-image">
-                <img src="{{ avatar_url }}" alt="profile" class="avatar">
+                {% if user.profile.avatar_url %}
+                    <img src="{{ user.profile.avatar_url }}" alt="profile" class="avatar">
+                {% else %}
+                    <img src="{% static 'img/profile.png' %}" alt="profile" class="avatar">
+                {% endif %}
             </div>
             <div class="profile-settings">
                 <div class="account-name">
-                    <a href="{% url 'profile' %}">{{ user.username }}</a>
+                    <a href="{% url 'profile_current_user' %}">{{ user.username }}</a>
                 </div>
                 <div class="account-actions">
                     <a href="{% url 'profile_settings' %}">Settings</a>
@@ -50,7 +54,7 @@
         </div>
         <aside class="sidebar">
             <section class="popular-tags">
-                <h2>Tags of the week</h2>
+                <h2>Tags of the Week</h2>
                 <div class="tags">
                     {% for tag in popular_tags %}
                         <a href="{% url 'tag_questions' tag.name %}">{{ tag.name }}</a>
@@ -59,11 +63,12 @@
                     {% endfor %}
                 </div>
             </section>
+
             <section class="top-mentors">
-                <h2>Top mentors</h2>
+                <h2>Top Mentors</h2>
                 <ul class="top-mentors-list">
                     {% for mentor in top_mentors %}
-                        <li><a href="{% url 'profile' mentor.username %}">{{ mentor.username }}</a></li>
+                        <li><a href="{% url 'profile' mentor.user.username %}">{{ mentor.user.username }}</a></li>
                     {% empty %}
                         <p>No mentors available.</p>
                     {% endfor %}

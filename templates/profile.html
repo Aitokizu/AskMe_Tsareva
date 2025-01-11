@@ -1,19 +1,26 @@
 {% extends 'layouts/base.html' %}
 {% load static %}
 
-
-
 {% block content %}
-     <h1>User Profile</h1>
+    <h1>User Profile</h1>
 
-    <img src="./image.jpg" alt="image" class="card-image">
+    <!-- Аватар пользователя -->
+    <div class="profile-image">
+        {% if user.profile.avatar_url %}
+            <img src="{{ user.profile.avatar_url }}" alt="Avatar" class="card-image">
+        {% else %}
+            <img src="{% static 'img/profile.png' %}" alt="Default Avatar" class="card-image">
+        {% endif %}
+    </div>
+
+    <!-- Информация о пользователе -->
     <h2>{{ user.username }}</h2>
-    <p><strong>Bio:</strong> {{ user.bio }}</p>
-    <p><strong>Joined:</strong> {{ user.joined_date }}</p>
+    <p><strong>Bio:</strong> {{ user.profile.bio|default:"No bio provided." }}</p>
+    <p><strong>Joined:</strong> {{ user.date_joined|date:"F j, Y" }}</p>
 
+    <!-- Ссылки -->
     <div>
         <a href="{% url 'profile_settings' %}">Edit Profile</a>
         <a href="{% url 'index' %}">Back to Home</a>
     </div>
-
 {% endblock %}

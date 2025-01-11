@@ -97,3 +97,11 @@ class AnswerLike(models.Model):
 
     def str(self):
         return f"{self.user.username} likes an answer to {self.answer.question.title}"
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    bio = models.TextField(blank=True, null=True)
+    avatar_url = models.URLField(blank=True, null=True)
+
+    def str(self):
+        return self.user.username

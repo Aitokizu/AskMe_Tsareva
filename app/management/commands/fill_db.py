@@ -5,6 +5,14 @@ from app.models import Question, Answer, Tag, QuestionLike, AnswerLike
 from django.core.management.base import BaseCommand
 from django.db import transaction
 
+import random
+from django.core.management.base import BaseCommand
+from django.db import transaction
+from faker import Faker
+from django.contrib.auth.models import User
+from app.models import Tag, Question, Answer, QuestionLike, AnswerLike, UserProfile
+from django.templatetags.static import static
+
 fake = Faker()
 
 
@@ -29,10 +37,13 @@ class Command(BaseCommand):
 
     def generate_users(self, count):
         self.stdout.write("Generating users...")
+        default_avatar_url = static('img/profile.png')  # Дефолтный аватар
         for _ in range(count):
             username = fake.unique.user_name()
             email = fake.unique.email()
-            User.objects.create_user(username=username, email=email, password='password123')
+            user = User.objects.create_user(username=username, email=email, password='password123')
+            # Создаем профиль для пользователя
+            UserProfile.objects.create(user=user, avatar_url=default_avatar_url)
         self.stdout.write(f"Generated {count} users.")
 
     def generate_tags(self, count):
@@ -41,7 +52,6 @@ class Command(BaseCommand):
         tags = []
 
         for _ in range(count):
-
             tag_name = fake.unique.word()
             while tag_name in existing_tags:
                 tag_name = fake.unique.word()
