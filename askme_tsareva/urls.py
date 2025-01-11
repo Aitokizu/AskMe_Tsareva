@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path
 from app import views
 from app.views import tag_questions
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -27,5 +28,8 @@ urlpatterns = [
     path('profile/settings/', views.profile_settings, name='profile_settings'),
     path('profile/', views.profile, name='profile'),
     path('tag/<str:tag_name>/', tag_questions, name='tag_questions'),
+    path('login/', auth_views.LoginView.as_view(), name='login'),
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+    path('signup/', views.signup, name='signup'),
     path('admin/', admin.site.urls),
 ]

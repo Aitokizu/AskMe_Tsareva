@@ -2,25 +2,26 @@
 
 <article class="card">
     <div class="user-post">
-        <img src="{% static 'img/profile.png' %}" alt="image" class="card-image">
+        <img src="{{ question.author.profile.avatar.url|default:'static/img/profile.png' }}" alt="Avatar" class="avatar">
     </div>
 
     <div class="post-content">
         <div class="post-content-preview">
-             <h3 class="card-title"><a href="{% url 'one_question' question.id %}">{{question.title}}</a></h3>
+            <h3 class="card-title">
+                <a href="{% url 'one_question' question.id %}">{{ question.title }}</a>
+            </h3>
             <div class="card-text">{{ question.text }}</div>
         </div>
         <div class="post-content-bottom">
+            <input type="number" class="card-likes" value="{{ question.likes_count }}" readonly>
 
-            <input type="number" class="card-likes" value="{{ question.likes_count }}">
-
-
-             <a href="./answers.html" >Answer(23)</a>
-
+            <a href="{% url 'one_question' question.id %}">Answer({{ question.answers_count }})</a>
 
             <div class="tags">
                 {% for tag in question.tags.all %}
                     <a href="{% url 'tag_questions' tag.name %}">{{ tag.name }}</a>
+                {% empty %}
+                    <span>No tags</span>
                 {% endfor %}
             </div>
         </div>
