@@ -134,3 +134,60 @@ body{
     flex-direction: row;
     gap: 40px;
 }
+
+/* Контейнер профиля */
+.profile-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+}
+
+/* Аватар */
+.profile-image {
+    margin-bottom: 20px;
+}
+
+.profile-image .avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ccc;
+}
+
+/* Информация о пользователе */
+.profile-info {
+    margin-bottom: 20px;
+}
+
+.profile-info .username {
+    font-size: 24px;
+    margin: 10px 0;
+}
+
+.profile-info .bio {
+    font-size: 16px;
+    color: #555;
+}
+
+.profile-info .joined-date {
+    font-size: 14px;
+    color: #777;
+}
+
+.profile-links {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.profile-links a {
+    text-decoration: none;
+    color: #007bff;
+    font-size: 16px;
+}
+
+.profile-links a:hover {
+    text-decoration: underline;
+}

@@ -2,20 +2,20 @@
 {% load static %}
 
 {% block headline %}
-    <div class="title-bar">
-        <h1>New Questions</h1>
-        <a href="{% url 'index' %}">Hot Questions</a>
-    </div>
+   <div class="title-bar">
+       <h1>New Questions</h1>
+       <a href="{% url 'index' %}">Hot Questions</a>
+   </div>
 {% endblock %}
 
 {% block content %}
-    <div class="questions-list">
-        {% for question in questions %}
-            {% include 'layouts/question_card.html' %}
-        {% empty %}
-            <p>No questions found.</p>
-        {% endfor %}
-    </div>
+   <div class="questions-list">
+       {% for question in questions %}
+           {% include 'layouts/question_card.html' %}
+       {% empty %}
+           <p>No questions found.</p>
+       {% endfor %}
+   </div>
 
-    {% include 'layouts/pagination.html' %}
+   {% include 'layouts/pagination.html' %}
 {% endblock %}

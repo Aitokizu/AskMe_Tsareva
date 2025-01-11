@@ -2,19 +2,16 @@
 {% load static %}
 
 {% block headline %}
-    <div class="title-bar">
-        <h1>Hot questions</h1>
-        <a href="{% url 'new'%}">New questions</a>
-    </div>
+   <div class="title-bar">
+       <h1>Hot questions</h1>
+       <a href="{% url 'new' %}">New questions</a>
+   </div>
 {% endblock %}
 
 {% block content %}
-                    {% for question in questions %}
+   {% for question in questions %}
+       {% include 'layouts/question_card.html' %}
+   {% endfor %}
 
-                        {% include 'layouts/question_card.html' %}
-
-                    {% endfor %}
-
-                    {% include 'layouts/pagination.html' %}
-
+   {% include 'layouts/pagination.html' %}
 {% endblock %}

@@ -1,28 +1,23 @@
 {% extends 'layouts/base.html' %}
 {% load static %}
 
-
 {% block content %}
-    <a href="{% url 'index' %}" class="back-button">Back to questions</a>
-    <div class="user-nickname">
-        <img src="./image.jpg" alt="image" class="card-image">
-        <h4 >NICKNAME</h4>
-    </div>
-    <h1>{{ item.title }}</h1>
-    <div class="tags">
-        <a href="tag.html">Link</a>
-        <a href="tag.html">Link</a>
-        <a href="tag.html">Link</a>
-    </div>
-    <article class="card">
-
-        <p>{{ item.text }}</p>
-
-    </article>
-    <div class="other">
-        <input type="number" class="card-likes" value="10">
-        <a>Comments</a>
-
-    </div>
-
+   <a href="{% url 'index' %}" class="back-button">Back to questions</a>
+   <div class="user-nickname">
+       <img src="{% if question.author.profile.avatar_url %}{{ question.author.profile.avatar_url }}{% else %}{% static 'img/profile.png' %}{% endif %}" alt="Avatar" class="card-image">
+       <h4>{{ question.author.username }}</h4>
+   </div>
+   <h1>{{ question.title }}</h1>
+   <div class="tags">
+       {% for tag in question.tags.all %}
+           <a href="{% url 'tag_questions' tag.name %}">{{ tag.name }}</a>
+       {% endfor %}
+   </div>
+   <article class="card">
+       <p>{{ question.text }}</p>
+   </article>
+   <div class="other">
+       <input type="number" class="card-likes" value="{{ question.likes.count }}">
+       <a>Comments</a>
+   </div>
 {% endblock %}

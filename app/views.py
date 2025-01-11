@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.templatetags.static import static
-from .forms import QuestionForm, AnswerForm
+from .forms import QuestionForm, AnswerForm, ProfileForm
 from .models import Question, Answer, UserProfile, Tag
 
 
@@ -67,6 +67,7 @@ def tag_questions(request, tag_name):
 def question(request, question_id):
     one_question = get_object_or_404(Question, id=question_id)
     answers = Answer.objects.filter(question=one_question).order_by('-created_at')
+
     if request.method == 'POST':
         form = AnswerForm(request.POST)
         if form.is_valid():
@@ -77,6 +78,7 @@ def question(request, question_id):
             return redirect('question', question_id=question_id)
     else:
         form = AnswerForm()
+
     return render(request, 'post.html', {
         'question': one_question,
         'answers': answers,
@@ -92,6 +94,7 @@ def ask(request):
             question = form.save(commit=False)
             question.author = request.user
             question.save()
+            form.save_m2m()  # Сохраняем теги
             return redirect('question', question_id=question.id)
     else:
         form = QuestionForm()
@@ -113,27 +116,17 @@ def paginate(objects_list, request, per_page=10):
 @login_required
 def profile_settings(request):
     user = request.user
-    profile, created = UserProfile.objects.get_or_create(user=user)
+    profile = user.userprofile
 
     if request.method == 'POST':
-        username = request.POST.get('username')
-        email = request.POST.get('email')
-        bio = request.POST.get('bio')
-        avatar_url = request.POST.get('avatar_url')
+        form = ProfileForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect('profile_settings')
+    else:
+        form = ProfileForm(instance=profile)
 
-        user.username = username
-        user.email = email
-        profile.bio = bio
-        profile.avatar_url = avatar_url
-
-        user.save()
-        profile.save()
-        return redirect('profile_settings')
-
-    return render(request, 'profile_settings.html', {
-        'user': user,
-        'profile': profile
-    })
+    return render(request, 'profile_settings.html', {'form': form})
 
 def profile(request, username):
     user = get_object_or_404(User, username=username)

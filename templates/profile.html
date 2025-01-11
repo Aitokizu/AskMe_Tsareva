@@ -2,25 +2,29 @@
 {% load static %}
 
 {% block content %}
-    <h1>User Profile</h1>
+   <div class="profile-container">
+       <h1>User Profile</h1>
 
-    <!-- Аватар пользователя -->
-    <div class="profile-image">
-        {% if user.profile.avatar_url %}
-            <img src="{{ user.profile.avatar_url }}" alt="Avatar" class="card-image">
-        {% else %}
-            <img src="{% static 'img/profile.png' %}" alt="Default Avatar" class="card-image">
-        {% endif %}
-    </div>
+       <!-- Аватар пользователя -->
+       <div class="profile-image">
+           {% if user.profile.avatar_url %}
+               <img src="{{ user.profile.avatar_url }}" alt="Avatar" class="avatar">
+           {% else %}
+               <img src="{% static 'img/profile.png' %}" alt="Default Avatar" class="avatar">
+           {% endif %}
+       </div>
 
-    <!-- Информация о пользователе -->
-    <h2>{{ user.username }}</h2>
-    <p><strong>Bio:</strong> {{ user.profile.bio|default:"No bio provided." }}</p>
-    <p><strong>Joined:</strong> {{ user.date_joined|date:"F j, Y" }}</p>
+       <!-- Информация о пользователе -->
+       <div class="profile-info">
+           <h2 class="username">{{ user.username }}</h2>
+           <p class="bio"><strong>Bio:</strong> {{ user.profile.bio|default:"No bio provided." }}</p>
+           <p class="joined-date"><strong>Joined:</strong> {{ user.date_joined|date:"F j, Y" }}</p>
+       </div>
 
-    <!-- Ссылки -->
-    <div>
-        <a href="{% url 'profile_settings' %}">Edit Profile</a>
-        <a href="{% url 'index' %}">Back to Home</a>
-    </div>
+       <!-- Ссылки -->
+       <div class="profile-links">
+           <a href="{% url 'profile_settings' %}" class="edit-profile-link">Edit Profile</a>
+           <a href="{% url 'index' %}" class="home-link">Back to Home</a>
+       </div>
+   </div>
 {% endblock %}

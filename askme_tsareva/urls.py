@@ -17,10 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.views.generic import RedirectView
-
-from app import views
-from app.views import tag_questions
 from django.contrib.auth import views as auth_views
+from app import views
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -31,9 +29,9 @@ urlpatterns = [
     path('profile/', views.profile_current_user, name='profile_current_user'),
     path('accounts/profile/', RedirectView.as_view(pattern_name='profile_current_user')),
     path('profile/<str:username>/', views.profile, name='profile'),
-    path('tag/<str:tag_name>/', tag_questions, name='tag_questions'),
-    path('login/', auth_views.LoginView.as_view(), name='login'),
-    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+    path('tag/<str:tag_name>/', views.tag_questions, name='tag_questions'),
+    path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
+    path('logout/', auth_views.LogoutView.as_view(next_page='index'), name='logout'),
     path('signup/', views.signup, name='signup'),
     path('admin/', admin.site.urls),
 ]

@@ -24,11 +24,10 @@
     <div class="profile">
         {% if user.is_authenticated %}
             <div class="profile-image">
-                {% if user.profile.avatar_url %}
-                    <img src="{{ user.profile.avatar_url }}" alt="profile" class="avatar">
-                {% else %}
-                    <img src="{% static 'img/profile.png' %}" alt="profile" class="avatar">
-                {% endif %}
+                <img src="{% if user.profile.avatar_url %}{{ user.profile.avatar_url }}{% else %}{% static 'img/profile.png' %}{% endif %}"
+                     alt="profile"
+                     class="avatar"
+                     style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">
             </div>
             <div class="profile-settings">
                 <div class="account-name">
@@ -36,7 +35,10 @@
                 </div>
                 <div class="account-actions">
                     <a href="{% url 'profile_settings' %}">Settings</a>
-                    <a href="{% url 'logout' %}">Log out</a>
+                    <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" style="background: none; border: none; color: blue; cursor: pointer;">Log out</button>
+                    </form>
                 </div>
             </div>
         {% else %}
