@@ -236,14 +236,36 @@ body {
 
 /* Контейнер профиля */
 .profile-container {
-    max-width: 600px;
+    max-width: 800px;
     margin: 0 auto;
     padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Заголовок профиля */
+.profile-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
     text-align: center;
 }
 
-/* Аватар в профиле */
-.profile-image .avatar {
+/* Контейнер для аватарки и текста */
+.profile-content {
+    display: flex;
+    align-items: flex-start; /* Выравнивание по верхнему краю */
+    gap: 20px; /* Отступ между аватаркой и текстом */
+    margin-bottom: 20px;
+}
+
+/* Контейнер для аватарки */
+.profile-image-container {
+    flex: 0 0 auto; /* Фиксированная ширина */
+}
+
+.profile-image-container .avatar {
     width: 150px;
     height: 150px;
     border-radius: 50%;
@@ -251,42 +273,113 @@ body {
     border: 2px solid #ccc;
 }
 
-/* Информация о пользователе */
-.profile-info {
-    margin-bottom: 20px;
+/* Контейнер для текста */
+.profile-text-container {
+    flex: 1; /* Занимает оставшееся пространство */
 }
 
-.profile-info .username {
+.profile-text-container .username {
     font-size: 24px;
-    margin: 10px 0;
+    margin: 0 0 10px;
     color: #333;
 }
 
-.profile-info .bio {
+.profile-text-container .bio {
     font-size: 16px;
     color: #555;
+    margin-bottom: 10px;
 }
 
-.profile-info .joined-date {
+.profile-text-container .joined-date {
     font-size: 14px;
     color: #777;
 }
 
-/* Ссылки в профиле */
+/* Ссылки */
 .profile-links {
     display: flex;
     justify-content: center;
     gap: 10px;
+    margin-bottom: 30px;
 }
 
 .profile-links a {
     text-decoration: none;
     color: #007bff;
     font-size: 16px;
+    padding: 8px 16px;
+    border: 1px solid #007bff;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
 }
 
 .profile-links a:hover {
-    text-decoration: underline;
+    background-color: #007bff;
+    color: #fff;
+}
+
+/* Вопросы пользователя */
+.user-questions {
+    margin-top: 30px;
+}
+
+.questions-title {
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.question {
+    border-top: 1px solid #eee;
+    padding: 20px 0;
+}
+
+.question-title {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.question-title a {
+    color: #333;
+    text-decoration: none;
+}
+
+.question-title a:hover {
+    color: #007bff;
+}
+
+.question-text {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.question-meta {
+    display: flex;
+    gap: 20px;
+}
+
+.question-meta .likes,
+.question-meta .answers {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #666;
+}
+
+.question-meta .icon {
+    font-size: 14px;
+}
+
+.question-meta .count {
+    font-size: 12px;
+}
+
+/* Сообщение об отсутствии вопросов */
+.no-questions {
+    color: #666;
+    font-style: italic;
 }
 
 /* Контейнер вопроса */
