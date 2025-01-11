@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from app import views
+from app.views import tag_questions
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -25,5 +26,6 @@ urlpatterns = [
     path('ask/', views.ask, name='ask'),
     path('profile/settings/', views.profile_settings, name='profile_settings'),
     path('profile/', views.profile, name='profile'),
+    path('tag/<str:tag_name>/', tag_questions, name='tag_questions'),
     path('admin/', admin.site.urls),
 ]

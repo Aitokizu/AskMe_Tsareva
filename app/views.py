@@ -1,8 +1,8 @@
 from django.contrib.auth.models import User
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import Http404
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-import copy
+from .models import Tag, Question
 
 
 QUESTIONS = [
@@ -32,7 +32,7 @@ def question(request, question_id):
 def ask(request):
     return render(request, 'add_question.html')
 
-# Пагинация
+
 def paginate(objects_list, request, per_page=10):
     page_num = request.GET.get('page', 1)
     paginator = Paginator(objects_list, per_page)
@@ -69,3 +69,12 @@ def profile_settings(request):
 def profile(request):
     user = request.user
     return render(request, 'profile.html', {'user': user})
+
+def tag_questions(request, tag_name):
+    tag = get_object_or_404(Tag, name=tag_name)
+    questions = Question.objects.filter(tags=tag)
+    return render(
+        request,
+        'questions_by_tag.html',
+        {'tag': tag, 'questions': questions}
+    )

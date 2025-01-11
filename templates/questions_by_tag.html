@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Questions tagged with "{{ tag.name }}"</h1>
+    <div class="questions-list">
+        {% for question in questions %}
+            <div class="question">
+                <h3><a href="{% url 'question' question.id %}">{{ question.title }}</a></h3>
+                <p>{{ question.text }}</p>
+            </div>
+        {% empty %}
+            <p>No questions with this tag.</p>
+        {% endfor %}
+    </div>
+{% endblock %}

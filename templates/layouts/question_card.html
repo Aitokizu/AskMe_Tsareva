@@ -2,22 +2,26 @@
 
 <article class="card">
     <div class="user-post">
-        <img src="./image.jpg" alt="image" class="card-image">
-
+        <img src="{% static 'img/profile.png' %}" alt="image" class="card-image">
     </div>
 
     <div class="post-content">
         <div class="post-content-preview">
-            <h3 class="card-title"><a href="{% url 'one_question' question.id %}">{{question.title}}</a></h3>
-            <div class="card-text">{{question.text}}</div>
+             <h3 class="card-title"><a href="{% url 'one_question' question.id %}">{{question.title}}</a></h3>
+            <div class="card-text">{{ question.text }}</div>
         </div>
         <div class="post-content-bottom">
-            <input type="number" class="card-likes" value="10">
-            <a href="./answers.html" >Answer(23)</a>
+
+            <input type="number" class="card-likes" value="{{ question.likes_count }}">
+
+
+             <a href="./answers.html" >Answer(23)</a>
+
+
             <div class="tags">
-                <a href="tag.html">Link</a>
-                <a href="tag.html">Link</a>
-                <a href="tag.html">Link</a>
+                {% for tag in question.tags.all %}
+                    <a href="{% url 'tag_questions' tag.name %}">{{ tag.name }}</a>
+                {% endfor %}
             </div>
         </div>
     </div>
