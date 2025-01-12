@@ -19,6 +19,10 @@ from django.urls import path
 from django.views.generic import RedirectView
 from django.contrib.auth import views as auth_views
 from app import views
+from django.conf import settings
+from django.conf.urls.static import static
+
+from app.views import like_question, mark_correct_answer
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -33,5 +37,10 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(next_page='index'), name='logout'),
     path('signup/', views.signup, name='signup'),
+    path('like/', like_question, name='like_question'),
+    path('mark_correct/', mark_correct_answer, name='mark_correct_answer'),
     path('admin/', admin.site.urls),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

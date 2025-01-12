@@ -7,6 +7,11 @@ from django.contrib.auth.decorators import login_required
 from django.templatetags.static import static
 from .forms import QuestionForm, AnswerForm, ProfileForm
 from .models import Question, Answer, UserProfile, Tag
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
+from .models import Question, QuestionLike
+
 
 
 def signup(request):
@@ -133,10 +138,11 @@ def paginate(objects_list, request, per_page=10):
     return page
 
 
+
 @login_required
 def profile_settings(request):
     user = request.user
-    profile = user.userprofile
+    profile, created = UserProfile.objects.get_or_create(user=user)  # Создаем профиль, если его нет
 
     if request.method == 'POST':
         form = ProfileForm(request.POST, request.FILES, instance=profile)
@@ -148,10 +154,13 @@ def profile_settings(request):
 
     return render(request, 'profile_settings.html', {'form': form})
 
+
 def profile(request, username):
     user = get_object_or_404(User, username=username)
     profile, created = UserProfile.objects.get_or_create(user=user)
-    avatar_url = profile.avatar_url if profile.avatar_url else static('img/profile.png')
+
+    avatar_url = profile.avatar.url if profile.avatar else static('img/profile.png')
+
     return render(request, 'profile.html', {
         'user': user,
         'profile': profile,
@@ -162,3 +171,42 @@ def profile(request, username):
 @login_required
 def profile_current_user(request):
     return redirect('profile', username=request.user.username)
+
+
+@require_POST
+@login_required
+def like_question(request):
+    question_id = request.POST.get('question_id')
+    action = request.POST.get('action')
+    question = get_object_or_404(Question, id=question_id)
+
+    if action == 'like':
+        like, created = QuestionLike.objects.get_or_create(user=request.user, question=question)
+        if not created:
+            return JsonResponse({'status': 'error', 'message': 'You already liked this question.'})
+    elif action == 'dislike':
+        like = QuestionLike.objects.filter(user=request.user, question=question).first()
+        if like:
+            like.delete()
+        else:
+            return JsonResponse({'status': 'error', 'message': 'You have not liked this question yet.'})
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Invalid action.'})
+
+    likes_count = question.likes.count()
+    return JsonResponse({'status': 'ok', 'likes_count': likes_count})
+
+@require_POST
+@login_required
+def mark_correct_answer(request):
+    question_id = request.POST.get('question_id')
+    answer_id = request.POST.get('answer_id')
+    question = get_object_or_404(Question, id=question_id)
+    answer = get_object_or_404(Answer, id=answer_id)
+
+    if question.author != request.user:
+        return JsonResponse({'status': 'error', 'message': 'Only the author can mark correct answers.'})
+
+    question.correct_answer = answer
+    question.save()
+    return JsonResponse({'status': 'ok'})

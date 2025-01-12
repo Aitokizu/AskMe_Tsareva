@@ -3,55 +3,52 @@
 
 {% block content %}
 <div class="profile-container">
-    <!-- Заголовок профиля -->
-    <h1 class="profile-title">User Profile</h1>
+   <!-- Заголовок профиля -->
+   <h1 class="profile-title">User Profile</h1>
 
-    <!-- Контейнер для аватарки и текста -->
-    <div class="profile-content">
-        <!-- Контейнер для аватарки -->
-        <div class="profile-image-container">
-            <img src="{% if user.profile.avatar_url %}{{ user.profile.avatar_url }}{% else %}{% static 'img/profile.png' %}{% endif %}"
-                 alt="Avatar"
-                 class="avatar">
-        </div>
+   <!-- Контейнер для аватарки и текста -->
+   <div class="profile-content">
+       <div class="profile-image-container">
+           <img src="{{ profile.avatar_url }}" alt="Avatar" class="avatar">  <!-- Используем avatar_url -->
+       </div>
 
-        <!-- Контейнер для текста -->
-        <div class="profile-text-container">
-            <h2 class="username">{{ user.username }}</h2>
-            <p class="bio"><strong>Bio:</strong> {{ user.profile.bio|default:"No bio provided." }}</p>
-            <p class="joined-date"><strong>Joined:</strong> {{ user.date_joined|date:"F j, Y" }}</p>
-        </div>
-    </div>
+       <!-- Контекст для текста -->
+       <div class="profile-text-container">
+           <h2 class="username">{{ user.username }}</h2>
+           <p class="bio"><strong>Bio:</strong> {{ user.profile.bio|default:"No bio provided." }}</p>
+           <p class="joined-date"><strong>Joined:</strong> {{ user.date_joined|date:"F j, Y" }}</p>
+       </div>
+   </div>
 
-    <!-- Ссылки -->
-    <div class="profile-links">
-        <a href="{% url 'profile_settings' %}" class="edit-profile-link">Edit Profile</a>
-        <a href="{% url 'index' %}" class="home-link">Back to Home</a>
-    </div>
+   <!-- Ссылки -->
+   <div class="profile-links">
+       <a href="{% url 'profile_settings' %}" class="edit-profile-link">Edit Profile</a>
+       <a href="{% url 'index' %}" class="home-link">Back to Home</a>
+   </div>
 
-    <!-- Вопросы пользователя -->
-    <div class="user-questions">
-        <h2 class="questions-title">Questions by {{ user.username }}</h2>
-        {% for question in user.questions.all %}
-            <div class="question">
-                <h3 class="question-title">
-                    <a href="{% url 'one_question' question.id %}">{{ question.title }}</a>
-                </h3>
-                <div class="question-text">{{ question.text|truncatewords:30 }}</div>
-                <div class="question-meta">
-                    <div class="likes">
-                        <span class="icon">👍</span>
-                        <span class="count">{{ question.likes_count }}</span>
-                    </div>
-                    <div class="answers">
-                        <span class="icon">💬</span>
-                        <span class="count">{{ question.answers_count }}</span>
-                    </div>
-                </div>
-            </div>
-        {% empty %}
-            <p class="no-questions">No questions yet.</p>
-        {% endfor %}
-    </div>
+   <!-- Вопросы пользователя -->
+   <div class="user-questions">
+       <h2 class="questions-title">Questions by {{ user.username }}</h2>
+       {% for question in user.questions.all %}
+           <div class="question">
+               <h3 class="question-title">
+                   <a href="{% url 'one_question' question.id %}">{{ question.title }}</a>
+               </h3>
+               <div class="question-text">{{ question.text|truncatewords:30 }}</div>
+               <div class="question-meta">
+                   <div class="likes">
+                       <span class="icon">👍</span>
+                       <span class="count">{{ question.likes.count }}</span>
+                   </div>
+                   <div class="answers">
+                       <span class="icon">💬</span>
+                       <span class="count">{{ question.answers.count }}</span>
+                   </div>
+               </div>
+           </div>
+       {% empty %}
+           <p class="no-questions">No questions yet.</p>
+       {% endfor %}
+   </div>
 </div>
 {% endblock %}

@@ -14,7 +14,10 @@ class SignUpForm(UserCreationForm):
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
-        fields = ['bio', 'avatar_url']
+        fields = ['avatar', 'bio']
+        widgets = {
+            'avatar': forms.FileInput(attrs={'accept': 'image/*'}),
+        }
 
 class QuestionForm(forms.ModelForm):
     class Meta:

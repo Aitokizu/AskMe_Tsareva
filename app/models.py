@@ -15,14 +15,18 @@ def validate_file_size(file):
         raise ValidationError(f'File size exceeds {max_size_kb} KB.')
 
 class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    avatar = models.FileField(upload_to='avatars/', blank=True, null=True)  # Используем avatar вместо avatar_path
     bio = models.TextField(blank=True, null=True)
-    avatar_url = models.URLField(blank=True, null=True)
 
     def __str__(self):
         return self.user.username
 
-
+    @property
+    def avatar_url(self):
+        if self.avatar:
+            return self.avatar.url  # Возвращает URL загруженного файла
+        return '/static/img/profile.png'  # Путь к изображению по умолчанию
 # Теги
 class Tag(models.Model):
     name = models.CharField(max_length=50, unique=True)
@@ -91,10 +95,3 @@ class AnswerLike(models.Model):
     def str(self):
         return f"{self.user.username} likes an answer to {self.answer.question.title}"
 
-class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    bio = models.TextField(blank=True, null=True)
-    avatar_url = models.URLField(blank=True, null=True)
-
-    def str(self):
-        return self.user.username

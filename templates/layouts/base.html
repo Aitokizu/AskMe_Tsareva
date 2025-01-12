@@ -24,7 +24,7 @@
     <div class="profile">
         {% if user.is_authenticated %}
             <div class="profile-image">
-                <img src="{% if user.profile.avatar_url %}{{ user.profile.avatar_url }}{% else %}{% static 'img/profile.png' %}{% endif %}"
+                <img src="{% if user.profile.avatar %}{{ user.profile.avatar.url }}{% else %}{% static 'img/profile.png' %}{% endif %}"
                      alt="profile"
                      class="avatar"
                      style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">

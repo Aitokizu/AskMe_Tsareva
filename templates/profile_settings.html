@@ -2,22 +2,23 @@
 {% load static %}
 
 {% block content %}
-   <h1>Profile Settings</h1>
-   <form method="post" action="{% url 'profile_settings' %}">
-       {% csrf_token %}
-       <label for="username">Username:</label>
-       <input type="text" id="username" name="username" value="{{ user.username }}" required>
-       <br><br>
+  <h1>Profile Settings</h1>
+  <form method="post" enctype="multipart/form-data">  <!-- Добавляем enctype для загрузки файлов -->
+      {% csrf_token %}
 
-       <label for="email">Email:</label>
-       <input type="email" id="email" name="email" value="{{ user.email }}" required>
-       <br><br>
+      <!-- Поле для загрузки аватара -->
+      <div class="form-group">
+          <label for="id_avatar">Avatar:</label>
+          {{ form.avatar }}
+      </div>
 
-       <label for="bio">Bio:</label>
-       <textarea id="bio" name="bio" rows="5">{{ user.profile.bio }}</textarea>
-       <br><br>
+      <!-- Поле для ввода bio -->
+      <div class="form-group">
+          <label for="id_bio">Bio:</label>
+          {{ form.bio }}
+      </div>
 
-       <button type="submit">Save Changes</button>
-   </form>
-   <a href="{% url 'index' %}">Back to Home</a>
+      <button type="submit" class="btn btn-primary">Save Changes</button>
+  </form>
+  <a href="{% url 'index' %}" class="btn btn-secondary">Back to Home</a>
 {% endblock %}
