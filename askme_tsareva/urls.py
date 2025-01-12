@@ -27,8 +27,8 @@ from app.views import like_question, mark_correct_answer
 urlpatterns = [
     path('', views.index, name='index'),
     path('new/', views.new, name='new'),
+    path('ask/', views.ask, name='add_question'),
     path('question/<int:question_id>/', views.question, name='one_question'),
-    path('ask/', views.ask, name='ask'),
     path('profile/settings/', views.profile_settings, name='profile_settings'),
     path('profile/', views.profile_current_user, name='profile_current_user'),
     path('accounts/profile/', RedirectView.as_view(pattern_name='profile_current_user')),
@@ -37,8 +37,9 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(next_page='index'), name='logout'),
     path('signup/', views.signup, name='signup'),
-    path('like/', like_question, name='like_question'),
-    path('mark_correct/', mark_correct_answer, name='mark_correct_answer'),
+    path('like_question/', views.like_question, name='like_question'),
+    path('like_answer/', views.like_answer, name='like_answer'),
+    path('mark_correct_answer/', views.mark_correct_answer, name='mark_correct_answer'),
     path('admin/', admin.site.urls),
 ]
 

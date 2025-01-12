@@ -2,82 +2,140 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LEARNTODAY</title>
-    <link rel="stylesheet" href="{% static 'vanilla.css' %}">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>LEARNTODAY</title>
+   <link rel="stylesheet" href="{% static 'vanilla.css' %}">
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+   <meta name="csrf-token" content="{{ csrf_token }}">
 </head>
 <body>
 <header class="header">
-    <div class="logo">
-        <a href="{% url 'index' %}">
-            <img src="{% static 'img/LOGO.png' %}" alt="Learn Today" class="logo-image">
-        </a>
+   <div class="logo">
+       <a href="{% url 'index' %}">
+           <img src="{% static 'img/LOGO.png' %}" alt="Learn Today" class="logo-image">
+       </a>
+   </div>
+   <div class="search">
+       <form action="{% url 'index' %}" method="get">
+           <input class="search-input" type="text" name="q" placeholder="Search for questions...">
+           <button type="submit" class="search-button">Search</button>
+       </form>
+   </div>
+   <div class="ask-button">
+        <a href="{% url 'add_question' %}" class="btn btn-primary">Ask</a>
     </div>
-    <div class="search">
-        <form action="{% url 'index' %}" method="get">
-            <input class="search-input" type="text" name="q" placeholder="Search for questions...">
-            <button type="submit" class="search-button">Search</button>
-        </form>
-    </div>
-    <div class="profile">
-        {% if user.is_authenticated %}
-            <div class="profile-image">
-                <img src="{% if user.profile.avatar %}{{ user.profile.avatar.url }}{% else %}{% static 'img/profile.png' %}{% endif %}"
-                     alt="profile"
-                     class="avatar"
-                     style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">
-            </div>
-            <div class="profile-settings">
-                <div class="account-name">
-                    <a href="{% url 'profile_current_user' %}">{{ user.username }}</a>
-                </div>
-                <div class="account-actions">
-                    <a href="{% url 'profile_settings' %}">Settings</a>
-                    <form action="{% url 'logout' %}" method="post" style="display: inline;">
-                        {% csrf_token %}
-                        <button type="submit" style="background: none; border: none; color: blue; cursor: pointer;">Log out</button>
-                    </form>
-                </div>
-            </div>
-        {% else %}
-            <a href="{% url 'login' %}">Login</a>
-            <a href="{% url 'signup' %}">Sign up</a>
-        {% endif %}
-    </div>
+   <div class="profile">
+       {% if user.is_authenticated %}
+           <div class="profile-image">
+               <img src="{% if user.profile.avatar %}{{ user.profile.avatar.url }}{% else %}{% static 'img/profile.png' %}{% endif %}"
+                    alt="profile"
+                    class="avatar"
+                    style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">
+           </div>
+           <div class="profile-settings">
+               <div class="account-name">
+                   <a href="{% url 'profile_current_user' %}">{{ user.username }}</a>
+               </div>
+               <div class="account-actions">
+                   <a href="{% url 'profile_settings' %}">Settings</a>
+                   <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                       {% csrf_token %}
+                       <button type="submit" style="background: none; border: none; color: blue; cursor: pointer;">Log out</button>
+                   </form>
+               </div>
+           </div>
+       {% else %}
+           <a href="{% url 'login' %}">Login</a>
+           <a href="{% url 'signup' %}">Sign up</a>
+       {% endif %}
+   </div>
 </header>
 <main class="container">
-    {% block headline %}{% endblock %}
+   {% block headline %}{% endblock %}
 
-    <div class="content">
-        <div class="cards">
-            {% block content %}{% endblock %}
-        </div>
-        <aside class="sidebar">
-            <section class="popular-tags">
-                <h2>Tags of the Week</h2>
-                <div class="tags">
-                    {% for tag in popular_tags %}
-                        <a href="{% url 'tag_questions' tag.name %}">{{ tag.name }}</a>
-                    {% empty %}
-                        <p>No tags available.</p>
-                    {% endfor %}
-                </div>
-            </section>
+   <div class="content">
+       <div class="cards">
+           {% block content %}{% endblock %}
+       </div>
+       <aside class="sidebar">
+           <section class="popular-tags">
+               <h2>Tags of the Week</h2>
+               <div class="tags">
+                   {% for tag in popular_tags %}
+                       <a href="{% url 'tag_questions' tag.name %}">{{ tag.name }}</a>
+                   {% empty %}
+                       <p>No tags available.</p>
+                   {% endfor %}
+               </div>
+           </section>
 
-            <section class="top-mentors">
-                <h2>Top Mentors</h2>
-                <ul class="top-mentors-list">
-                    {% for mentor in top_mentors %}
-                        <li><a href="{% url 'profile' mentor.user.username %}">{{ mentor.user.username }}</a></li>
-                    {% empty %}
-                        <p>No mentors available.</p>
-                    {% endfor %}
-                </ul>
-            </section>
-        </aside>
-    </div>
+           <section class="top-mentors">
+               <h2>Top Mentors</h2>
+               <ul class="top-mentors-list">
+                   {% for mentor in top_mentors %}
+                       <li><a href="{% url 'profile' mentor.user.username %}">{{ mentor.user.username }}</a></li>
+                   {% empty %}
+                       <p>No mentors available.</p>
+                   {% endfor %}
+               </ul>
+           </section>
+       </aside>
+   </div>
 </main>
+
+<!-- Скрипт для обработки лайков -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const likeButtons = document.querySelectorAll('.like-button');
+
+    likeButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            {% if not user.is_authenticated %}
+                window.location.href = "{% url 'login' %}";
+                return;
+            {% endif %}
+
+            const questionId = this.dataset.questionId;
+            const action = this.dataset.action;
+            const url = "{% url 'like_question' %}";
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                body: JSON.stringify({
+                    question_id: questionId,
+                    action: action
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'ok') {
+                    const likeCountElement = this.nextElementSibling;
+                    likeCountElement.textContent = data.likes_count;
+
+                    // Меняем действие кнопки (like/dislike)
+                    if (action === 'like') {
+                        this.dataset.action = 'dislike';
+                        this.textContent = '👎';
+                    } else {
+                        this.dataset.action = 'like';
+                        this.textContent = '👍';
+                    }
+                } else {
+                    alert(data.message); // Показываем сообщение об ошибке
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    });
+});
+</script>
 </body>
 </html>

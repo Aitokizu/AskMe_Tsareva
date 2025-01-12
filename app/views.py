@@ -5,13 +5,14 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.templatetags.static import static
+from django.views.decorators.csrf import csrf_exempt
+
 from .forms import QuestionForm, AnswerForm, ProfileForm
-from .models import Question, Answer, UserProfile, Tag
+from .models import Question, Answer, UserProfile, Tag, AnswerLike
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from .models import Question, QuestionLike
-
 
 
 def signup(request):
@@ -19,7 +20,6 @@ def signup(request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            # Создаем профиль пользователя при регистрации
             UserProfile.objects.get_or_create(user=user)
             return redirect('login')
     else:
@@ -27,14 +27,11 @@ def signup(request):
     return render(request, 'signup.html', {'form': form})
 
 
-from django.db.models import Count
-from .models import Question, Tag, UserProfile
-
 def index(request):
     questions = Question.objects.annotate(
-        likes_count=Count('likes'),  # Аннотируем количество лайков
-        answers_count=Count('answers')  # Аннотируем количество ответов
-    ).order_by('-likes_count')  # Сортируем по количеству лайков
+        likes_count=Count('likes'),
+        answers_count=Count('answers')
+    ).order_by('-likes_count')
 
     popular_tags = Tag.objects.annotate(num_questions=Count('questions')).order_by('-num_questions')[:5]
     top_mentors = UserProfile.objects.annotate(num_answers=Count('user__answers')).order_by('-num_answers')[:5]
@@ -47,11 +44,12 @@ def index(request):
         'top_mentors': top_mentors
     })
 
+
 def new(request):
     questions = Question.objects.annotate(
-        likes_count=Count('likes'),  # Аннотируем количество лайков
-        answers_count=Count('answers')  # Аннотируем количество ответов
-    ).order_by('-created_at')  # Сортируем по дате создания
+        likes_count=Count('likes'),
+        answers_count=Count('answers')
+    ).order_by('-created_at')
 
     popular_tags = Tag.objects.annotate(num_questions=Count('questions')).order_by('-num_questions')[:5]
     top_mentors = UserProfile.objects.annotate(num_answers=Count('user__answers')).order_by('-num_answers')[:5]
@@ -83,14 +81,14 @@ def tag_questions(request, tag_name):
 def question(request, question_id):
     one_question = get_object_or_404(
         Question.objects.annotate(
-            likes_count=Count('likes'),  # Аннотируем количество лайков
-            answers_count=Count('answers')  # Аннотируем количество ответов
+            likes_count=Count('likes'),
+            answers_count=Count('answers')
         ),
         id=question_id
     )
 
     answers = Answer.objects.filter(question=one_question).annotate(
-        likes_count=Count('likes')  # Аннотируем количество лайков для ответов
+        likes_count=Count('likes')
     ).order_by('-created_at')
 
     if request.method == 'POST':
@@ -100,7 +98,7 @@ def question(request, question_id):
             answer.question = one_question
             answer.author = request.user
             answer.save()
-            return redirect('question', question_id=question_id)
+            return redirect('one_question', question_id=question_id)  # Используйте 'one_question'
     else:
         form = AnswerForm()
 
@@ -119,8 +117,8 @@ def ask(request):
             question = form.save(commit=False)
             question.author = request.user
             question.save()
-            form.save_m2m()  # Сохраняем теги
-            return redirect('question', question_id=question.id)
+            form.save_m2m()
+            return redirect('one_question', question_id=question.id)  # Используйте 'one_question'
     else:
         form = QuestionForm()
     return render(request, 'add_question.html', {'form': form})
@@ -138,11 +136,10 @@ def paginate(objects_list, request, per_page=10):
     return page
 
 
-
 @login_required
 def profile_settings(request):
     user = request.user
-    profile, created = UserProfile.objects.get_or_create(user=user)  # Создаем профиль, если его нет
+    profile, created = UserProfile.objects.get_or_create(user=user)
 
     if request.method == 'POST':
         form = ProfileForm(request.POST, request.FILES, instance=profile)
@@ -158,8 +155,7 @@ def profile_settings(request):
 def profile(request, username):
     user = get_object_or_404(User, username=username)
     profile, created = UserProfile.objects.get_or_create(user=user)
-
-    avatar_url = profile.avatar.url if profile.avatar else static('img/profile.png')
+    avatar_url = profile.avatar.url if profile.avatar else '/static/img/profile.png'
 
     return render(request, 'profile.html', {
         'user': user,
@@ -174,7 +170,7 @@ def profile_current_user(request):
 
 
 @require_POST
-@login_required
+@csrf_exempt
 def like_question(request):
     question_id = request.POST.get('question_id')
     action = request.POST.get('action')
@@ -195,6 +191,31 @@ def like_question(request):
 
     likes_count = question.likes.count()
     return JsonResponse({'status': 'ok', 'likes_count': likes_count})
+
+
+@require_POST
+@login_required
+def like_answer(request):
+    answer_id = request.POST.get('answer_id')
+    action = request.POST.get('action')
+    answer = get_object_or_404(Answer, id=answer_id)
+
+    if action == 'like':
+        like, created = AnswerLike.objects.get_or_create(user=request.user, answer=answer)
+        if not created:
+            return JsonResponse({'status': 'error', 'message': 'You already liked this answer.'})
+    elif action == 'dislike':
+        like = AnswerLike.objects.filter(user=request.user, answer=answer).first()
+        if like:
+            like.delete()
+        else:
+            return JsonResponse({'status': 'error', 'message': 'You have not liked this answer yet.'})
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Invalid action.'})
+
+    likes_count = answer.likes.count()
+    return JsonResponse({'status': 'ok', 'likes_count': likes_count})
+
 
 @require_POST
 @login_required

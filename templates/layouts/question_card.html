@@ -1,44 +1,90 @@
 {% load static %}
 
 <article class="card">
-   <div class="user-post">
-       <!-- Аватар автора вопроса -->
-       <img src="{% if question.author.profile.avatar_path %}{% static question.author.profile.avatar_path %}{% else %}{% static 'img/profile.png' %}{% endif %}"
-            alt="Profile Avatar"
-            class="avatar">
-   </div>
+  <div class="user-post">
+      <img src="{% if question.author.profile.avatar_path %}{% static question.author.profile.avatar_path %}{% else %}{% static 'img/profile.png' %}{% endif %}"
+           alt="Profile Avatar"
+           class="avatar">
+  </div>
 
-   <div class="post-content">
-       <!-- Заголовок и текст вопроса -->
-       <div class="post-content-preview">
-           <h3 class="card-title">
-               <a href="{% url 'one_question' question.id %}">{{ question.title }}</a>
-           </h3>
-           <div class="card-text">{{ question.text|truncatewords:30 }}</div>
-       </div>
+  <div class="post-content">
+      <div class="post-content-preview">
+          <h3 class="card-title">
+              <a href="{% url 'one_question' question.id %}">{{ question.title }}</a>
+          </h3>
+          <div class="card-text">{{ question.text|truncatewords:30 }}</div>
+      </div>
 
-       <!-- Лайки, ответы и теги -->
-       <div class="post-content-bottom">
-           <!-- Лайки -->
-           <div class="likes">
-               <button class="like-button" data-question-id="{{ question.id }}" data-action="like">👍</button>
-               <span class="count">{{ question.likes.count }}</span>
-           </div>
+      <div class="post-content-bottom">
+          <!-- Лайки -->
+          <div class="likes">
+              <button class="like-button" data-question-id="{{ question.id }}" data-action="like">👍</button>
+              <span class="count">{{ question.likes.count }}</span>
+          </div>
 
-           <!-- Ответы -->
-           <div class="answers">
-               <span class="icon">💬</span>
-               <span class="count">{{ question.answers.count }}</span>
-           </div>
+          <!-- Ответы -->
+          <div class="answers">
+              <span class="icon">💬</span>
+              <span class="count">{{ question.answers.count }}</span>
+          </div>
 
-           <!-- Теги -->
-           <div class="tags">
-               {% for tag in question.tags.all %}
-                   <a href="{% url 'tag_questions' tag.name %}" class="tag">{{ tag.name }}</a>
-               {% empty %}
-                   <span class="tag">No tags</span>
-               {% endfor %}
-           </div>
-       </div>
-   </div>
+          <!-- Теги -->
+          <div class="tags">
+              {% for tag in question.tags.all %}
+                  <a href="{% url 'tag_questions' tag.name %}" class="tag">{{ tag.name }}</a>
+              {% empty %}
+                  <span class="tag">No tags</span>
+              {% endfor %}
+          </div>
+      </div>
+  </div>
 </article>
+
+<!-- Добавьте этот скрипт в конец файла или в base.html -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const likeButtons = document.querySelectorAll('.like-button');
+
+    likeButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const questionId = this.dataset.questionId;
+            const action = this.dataset.action;
+            const url = "{% url 'like_question' %}";
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                body: JSON.stringify({
+                    question_id: questionId,
+                    action: action
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'ok') {
+                    const likeCountElement = this.nextElementSibling;
+                    likeCountElement.textContent = data.likes_count;
+
+                    // Меняем действие кнопки (like/dislike)
+                    if (action === 'like') {
+                        this.dataset.action = 'dislike';
+                        this.textContent = '👎';
+                    } else {
+                        this.dataset.action = 'like';
+                        this.textContent = '👍';
+                    }
+                } else {
+                    alert(data.message); // Показываем сообщение об ошибке
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    });
+});
+</script>

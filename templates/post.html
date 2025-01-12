@@ -3,145 +3,61 @@
 
 {% block content %}
 <div class="question-container">
-   <!-- Заголовок вопроса -->
-   <h1 class="question-title">{{ question.title }}</h1>
+    <h1 class="question-title">{{ question.title }}</h1>
+    <div class="question-content">
+        <div class="question-author">
+            <img src="{{ question.author.profile.avatar_url }}" alt="Avatar" class="avatar">
+            <span class="author-name">{{ question.author.username }}</span>
+        </div>
+        <div class="question-text">
+            {{ question.text }}
+        </div>
+        <div class="question-meta">
+            <div class="likes">
+                <button class="like-button" data-question-id="{{ question.id }}" data-action="like">👍</button>
+                <span class="count">{{ question.likes.count }}</span>
+            </div>
+            <div class="tags">
+                {% for tag in question.tags.all %}
+                    <a href="{% url 'tag_questions' tag.name %}" class="tag">{{ tag.name }}</a>
+                {% empty %}
+                    <span class="tag">No tags</span>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 
-   <!-- Информация о вопросе -->
-   <div class="question-content">
-       <!-- Аватар автора вопроса -->
-       <div class="question-author">
-           <img src="{% if question.author.profile.avatar_path %}{% static question.author.profile.avatar_path %}{% else %}{% static 'img/profile.png' %}{% endif %}"
-                alt="Avatar"
-                class="avatar">
-           <span class="author-name">{{ question.author.username }}</span>
-       </div>
+    <div class="answers-container">
+        <h2 class="answers-title">Answers ({{ question.answers.count }})</h2>
+        {% for answer in answers %}
+            <div class="answer">
+                <div class="answer-author">
+                    <img src="{{ answer.author.profile.avatar_url }}" alt="Avatar" class="avatar">
+                    <span class="author-name">{{ answer.author.username }}</span>
+                </div>
+                <div class="answer-text">
+                    {{ answer.text }}
+                </div>
+                <div class="answer-likes">
+                    <button class="like-answer-button" data-answer-id="{{ answer.id }}" data-action="like">👍</button>
+                    <span class="count">{{ answer.likes.count }}</span>
+                </div>
+                {% if question.author == request.user %}
+                    <button class="correct-answer-button" data-question-id="{{ question.id }}" data-answer-id="{{ answer.id }}">✅</button>
+                {% endif %}
+            </div>
+        {% empty %}
+            <p class="no-answers">No answers yet. Be the first to answer!</p>
+        {% endfor %}
+    </div>
 
-       <!-- Текст вопроса -->
-       <div class="question-text">
-           {{ question.text }}
-       </div>
-
-       <!-- Лайки и теги -->
-       <div class="question-meta">
-           <div class="likes">
-               <button class="like-button" data-question-id="{{ question.id }}" data-action="like">👍</button>
-               <span class="count">{{ question.likes.count }}</span>
-           </div>
-
-           <div class="tags">
-               {% for tag in question.tags.all %}
-                   <a href="{% url 'tag_questions' tag.name %}" class="tag">{{ tag.name }}</a>
-               {% empty %}
-                   <span class="tag">No tags</span>
-               {% endfor %}
-           </div>
-       </div>
-   </div>
-
-   <!-- Ответы -->
-   <div class="answers-container">
-       <h2 class="answers-title">Answers ({{ question.answers.count }})</h2>
-
-       {% for answer in answers %}
-           <div class="answer">
-               <!-- Аватар автора ответа -->
-               <div class="answer-author">
-                   <img src="{% if answer.author.profile.avatar_path %}{% static answer.author.profile.avatar_path %}{% else %}{% static 'img/profile.png' %}{% endif %}"
-                        alt="Avatar"
-                        class="avatar">
-                   <span class="author-name">{{ answer.author.username }}</span>
-               </div>
-
-               <!-- Текст ответа -->
-               <div class="answer-text">
-                   {{ answer.text }}
-               </div>
-
-               <!-- Лайки ответа -->
-               <div class="answer-likes">
-                   <button class="like-answer-button" data-answer-id="{{ answer.id }}" data-action="like">👍</button>
-                   <span class="count">{{ answer.likes.count }}</span>
-               </div>
-
-               <!-- Галочка "Правильный ответ" -->
-               {% if question.author == request.user %}
-                   <button class="correct-answer-button" data-question-id="{{ question.id }}" data-answer-id="{{ answer.id }}">✅</button>
-               {% endif %}
-           </div>
-       {% empty %}
-           <p class="no-answers">No answers yet. Be the first to answer!</p>
-       {% endfor %}
-   </div>
-
-   <!-- Форма добавления ответа -->
-   <div class="add-answer">
-       <h2>Add an Answer</h2>
-       <form method="post">
-           {% csrf_token %}
-           {{ form.as_p }}
-           <button type="submit" class="submit-button">Submit</button>
-       </form>
-   </div>
+    <div class="add-answer">
+        <h2>Add an Answer</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="submit-button">Submit</button>
+        </form>
+    </div>
 </div>
-
-<!-- Подключение jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<!-- Скрипт для обработки лайков вопроса -->
-<script>
-$(document).ready(function() {
-   $('.like-button').click(function() {
-       const button = $(this);
-       const questionId = button.data('question-id');
-       const action = button.data('action');
-       const url = "{% url 'like_question' %}";
-
-       $.ajax({
-           url: url,
-           type: 'POST',
-           data: {
-               'question_id': questionId,
-               'action': action,
-               'csrfmiddlewaretoken': '{{ csrf_token }}'
-           },
-           success: function(response) {
-               if (response.status === 'ok') {
-                   button.siblings('.count').text(response.likes_count);
-               } else {
-                   alert(response.message);
-               }
-           }
-       });
-   });
-});
-</script>
-
-<!-- Скрипт для отметки правильного ответа -->
-<script>
-$(document).ready(function() {
-   $('.correct-answer-button').click(function() {
-       const button = $(this);
-       const questionId = button.data('question-id');
-       const answerId = button.data('answer-id');
-       const url = "{% url 'mark_correct_answer' %}";
-
-       $.ajax({
-           url: url,
-           type: 'POST',
-           data: {
-               'question_id': questionId,
-               'answer_id': answerId,
-               'csrfmiddlewaretoken': '{{ csrf_token }}'
-           },
-           success: function(response) {
-               if (response.status === 'ok') {
-                   alert('Answer marked as correct!');
-               } else {
-                   alert(response.message);
-               }
-           }
-       });
-   });
-});
-</script>
 {% endblock %}
