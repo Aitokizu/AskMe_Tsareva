@@ -13,8 +13,15 @@
             {{ question.text }}
         </div>
         <div class="question-meta">
+            <!-- Лайки для вопроса -->
             <div class="likes">
-                <button class="like-button" data-question-id="{{ question.id }}" data-action="like">👍</button>
+                <button class="like-button" data-question-id="{{ question.id }}" data-action="like">
+                    {% if request.user in question.likes.all %}
+                        ❤️ <!-- Иконка, если лайк поставлен -->
+                    {% else %}
+                        👍 <!-- Иконка, если лайк не поставлен -->
+                    {% endif %}
+                </button>
                 <span class="count">{{ question.likes.count }}</span>
             </div>
             <div class="tags">
@@ -38,8 +45,15 @@
                 <div class="answer-text">
                     {{ answer.text }}
                 </div>
+                <!-- Лайки для ответа -->
                 <div class="answer-likes">
-                    <button class="like-answer-button" data-answer-id="{{ answer.id }}" data-action="like">👍</button>
+                    <button class="like-answer-button" data-answer-id="{{ answer.id }}" data-action="like">
+                        {% if request.user in answer.likes.all %}
+                            ❤️ <!-- Иконка, если лайк поставлен -->
+                        {% else %}
+                            👍 <!-- Иконка, если лайк не поставлен -->
+                        {% endif %}
+                    </button>
                     <span class="count">{{ answer.likes.count }}</span>
                 </div>
                 {% if question.author == request.user %}
@@ -60,4 +74,70 @@
         </form>
     </div>
 </div>
+
+<!-- Добавьте этот скрипт в конец файла -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Обработка лайков для вопросов
+    const questionLikeButtons = document.querySelectorAll('.like-button');
+    questionLikeButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            handleLike(this, 'question');
+        });
+    });
+
+    // Обработка лайков для ответов
+    const answerLikeButtons = document.querySelectorAll('.like-answer-button');
+    answerLikeButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            handleLike(this, 'answer');
+        });
+    });
+
+    function handleLike(button, type) {
+        {% if not user.is_authenticated %}
+            window.location.href = "{% url 'login' %}";
+            return;
+        {% endif %}
+
+        const id = button.dataset[`${type}Id`];
+        const action = button.dataset.action;
+        const url = type === 'question' ? "{% url 'like_question' %}" : "{% url 'like_answer' %}";
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
+            body: JSON.stringify({
+                [`${type}_id`]: id,
+                action: action
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'ok') {
+                const likeCountElement = button.nextElementSibling;
+                likeCountElement.textContent = data.likes_count;
+
+                // Меняем иконку и действие кнопки
+                if (action === 'like') {
+                    button.innerHTML = '❤️';
+                    button.dataset.action = 'dislike';
+                } else {
+                    button.innerHTML = '👍';
+                    button.dataset.action = 'like';
+                }
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+});
+</script>
 {% endblock %}
